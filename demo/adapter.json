@@ -1,0 +1,18 @@
+{
+  "categorias": [
+    {
+      "nome": "Cat 1",
+      "produtos": [
+        {"nome": "Prod 1"},
+        {"nome": "Prod 2"}
+      ]
+    },
+    {
+      "nome": "Cat 2",
+      "produtos": [
+        {"nome": "Prod 3"},
+        {"nome": "Prod 4"}
+      ]
+    }
+  ]
+}
