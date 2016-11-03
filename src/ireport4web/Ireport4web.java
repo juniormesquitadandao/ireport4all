@@ -22,8 +22,9 @@ public class Ireport4web {
 
         Map<String, Object> params = new HashMap<>();
 
-        File jasper = new File("../demo/report1.jasper");
+        File jasper = new File("demo/report1.jasper");
         String sourceFileName = jasper.getAbsolutePath();
+        System.out.println(sourceFileName);
         JasperPrint jasperPrint = JasperFillManager.fillReport(sourceFileName, params, jRDataSource);
         JasperViewer jasperViewer = new JasperViewer(jasperPrint);
         jasperViewer.setVisible(true);
