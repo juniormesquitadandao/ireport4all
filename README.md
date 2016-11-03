@@ -1,2 +1,2 @@
-# ireport4all
-Ireport for all
+# ireport4web
+Ireport for web
