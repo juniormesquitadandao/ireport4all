@@ -1,4 +1,4 @@
-package ireport4web;
+package ireport4all;
 
 import java.io.ByteArrayInputStream;
 import java.io.File;
@@ -13,7 +13,7 @@ import net.sf.jasperreports.engine.JasperPrint;
 import net.sf.jasperreports.engine.data.JsonDataSource;
 import net.sf.jasperreports.view.JasperViewer;
 
-public class Ireport4web {
+public class Ireport4All {
 
     public static void main(String[] args) throws JRException, UnsupportedEncodingException, FileNotFoundException {
         String json = "{\"data\":[{\"name\":\"Name\"}]}";
