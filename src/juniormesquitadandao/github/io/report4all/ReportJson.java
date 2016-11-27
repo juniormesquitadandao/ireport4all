@@ -2,9 +2,14 @@ package juniormesquitadandao.github.io.report4all;
 
 import java.io.File;
 import java.io.FileFilter;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
+import javax.xml.bind.DatatypeConverter;
 import net.sf.jasperreports.engine.JRException;
 import net.sf.jasperreports.engine.JRParameter;
 import net.sf.jasperreports.engine.JasperCompileManager;
@@ -63,7 +68,6 @@ public class ReportJson extends AbstractSampleApp {
         System.err.println("Exporting time : " + (System.currentTimeMillis() - start));
     }
 
-    @Override
     public void test() throws JRException {
         compile();
         fill();
@@ -73,6 +77,16 @@ public class ReportJson extends AbstractSampleApp {
     private boolean isChanged(File file) {
         return file.lastModified() != 0;
     }
+
+//    private boolean isChanged(File file) throws IOException, NoSuchAlgorithmException {
+//        byte[] bytes = Files.readAllBytes(file.toPath());
+//        byte[] digest = MessageDigest.getInstance("MD5").digest(bytes);
+//
+//        String expected = "b1fa6524a0a9639abdbe91638e6429e7";
+//        String actual = DatatypeConverter.printHexBinary(digest).toLowerCase();
+//
+//        return !expected.equals(actual);
+//    }
 
     public static void main(String[] args) throws JRException {
         main(new ReportJson(), new String[]{"test"});
