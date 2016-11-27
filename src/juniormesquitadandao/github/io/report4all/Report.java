@@ -2,10 +2,8 @@ package juniormesquitadandao.github.io.report4all;
 
 import java.io.File;
 import java.io.FileFilter;
-import java.io.IOException;
 import java.nio.file.Files;
 import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
@@ -34,8 +32,6 @@ public class Report extends AbstractSampleApp {
     }
 
     public void init() throws JRException {
-        long start = System.currentTimeMillis();
-
         try {
             file = new File(args[0].replace(".jrxml", ""));
             temp = new File(args[1] + File.separator + "report4all");
@@ -43,30 +39,23 @@ public class Report extends AbstractSampleApp {
 
             temp.mkdirs();
             cleanTemp();
-        } catch (NumberFormatException e) {
+        } catch (Exception e) {
             throw new JRException(e.toString(), e.getCause());
         }
-
-        System.err.println("Initializing time : " + (System.currentTimeMillis() - start));
     }
 
     public void checksum() throws JRException {
-        long start = System.currentTimeMillis();
-
         try {
             File json = toTempFile(new File(file.getAbsolutePath() + ".json"));
             byte[] bytes = Files.readAllBytes(json.toPath());
             byte[] digest = MessageDigest.getInstance("MD5").digest(bytes);
             checksum = DatatypeConverter.printHexBinary(digest).toLowerCase();
-        } catch (IOException | NoSuchAlgorithmException e) {
+        } catch (Exception e) {
             throw new JRException(e.toString(), e.getCause());
         }
-
-        System.err.println("Checksum time : " + (System.currentTimeMillis() - start));
     }
 
     public void compile() throws JRException {
-        long start = System.currentTimeMillis();
         JasperReportsContext jasperReportsContext = new SimpleJasperReportsContext();
         JasperCompileManager jasperCompileManager = JasperCompileManager.getInstance(jasperReportsContext);
 
@@ -82,12 +71,9 @@ public class Report extends AbstractSampleApp {
                 deleteJrprintsAndPdfs();
             }
         }
-
-        System.err.println("Compiling time : " + (System.currentTimeMillis() - start));
     }
 
     public void fill() throws JRException {
-        long start = System.currentTimeMillis();
         Map<String, Object> params = new HashMap<>();
         params.put(JsonQueryExecuterFactory.JSON_DATE_PATTERN, "yyyy-MM-dd");
         params.put(JsonQueryExecuterFactory.JSON_NUMBER_PATTERN, "#,##0.##");
@@ -102,20 +88,16 @@ public class Report extends AbstractSampleApp {
         } else if (isNew(jrprint)) {
             JasperFillManager.fillReportToFile(jasper.getAbsolutePath(), jrprint.getAbsolutePath(), params);
         }
-
-        System.err.println("Filling time : " + (System.currentTimeMillis() - start));
     }
 
     public void export() throws JRException {
-        long start = System.currentTimeMillis();
-
         File jrprint = new File(toTempFile(file).getAbsolutePath() + "-" + checksum + ".jrprint");
         File pdf = new File(toTempFile(file).getAbsolutePath() + "-" + checksum + ".pdf");
         if (isNew(pdf)) {
             JasperExportManager.exportReportToPdfFile(jrprint.getAbsolutePath(), pdf.getAbsolutePath());
         }
-
-        System.err.println("Exporting time : " + (System.currentTimeMillis() - start));
+        
+        System.out.println("file: " + pdf.getAbsolutePath());
     }
 
     @Override
