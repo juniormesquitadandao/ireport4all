@@ -4,7 +4,7 @@ import java.io.File;
 import java.io.FileFilter;
 import java.io.IOException;
 import java.nio.file.Files;
-import java.nio.file.StandardCopyOption;
+import java.nio.file.StandardOpenOption;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.HashMap;
@@ -41,10 +41,10 @@ public class Report extends AbstractSampleApp {
             file = new File(args[0].replace(".jrxml", ""));
             temp = new File(args[1] + File.separator + "report4all");
             approxTempSize = Long.valueOf(args[2]);
- 
+
             temp.mkdirs();
             cleanTemp();
-            writeJson();
+            writeJson(args[3]);
         } catch (IOException | NumberFormatException e) {
             throw new JRException(e.toString(), e.getCause());
         }
@@ -148,9 +148,10 @@ public class Report extends AbstractSampleApp {
         return size;
     }
 
-    private void writeJson() throws IOException {
+    private void writeJson(String base64) throws IOException {
+        byte[] bytes = DatatypeConverter.parseBase64Binary(base64);
         File json = new File(file.getAbsolutePath() + ".json");
-        Files.copy(json.toPath(), toTempFile(json).toPath(), StandardCopyOption.REPLACE_EXISTING);
+        Files.write(toTempFile(json).toPath(), bytes, StandardOpenOption.CREATE);
     }
 
     private File[] getSourceFiles(final String type) {
@@ -199,12 +200,15 @@ public class Report extends AbstractSampleApp {
         }
     }
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException {
         File file = new File("reports/JsonCustomersReport.jrxml");
         File temp = new File("temp");
         long approxTempSize = 1024 * 1024;
-
-        args = new String[]{file.getAbsolutePath(), temp.getAbsolutePath(), approxTempSize + ""};
+        
+        byte[] bytes = Files.readAllBytes(new File(file.getAbsolutePath().replace(".jrxml", ".json")).toPath());
+        String json = DatatypeConverter.printBase64Binary(bytes);
+ 
+        args = new String[]{file.getAbsolutePath(), temp.getAbsolutePath(), approxTempSize + "", json};
 
         main(new Report(args), new String[]{"test"});
     }
