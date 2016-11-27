@@ -3,6 +3,7 @@ package juniormesquitadandao.github.io.report4all;
 import java.io.File;
 import java.io.FileFilter;
 import java.nio.file.Files;
+import java.nio.file.StandardOpenOption;
 import java.security.MessageDigest;
 import java.util.HashMap;
 import java.util.Locale;
@@ -39,6 +40,8 @@ public class Report extends AbstractSampleApp {
 
             temp.mkdirs();
             cleanTemp();
+        } catch(ArrayIndexOutOfBoundsException e){
+            throw new JRException("Required Args: filePath, tempPath, approxTempSize.");
         } catch (Exception e) {
             throw new JRException(e.toString(), e.getCause());
         }
@@ -96,8 +99,8 @@ public class Report extends AbstractSampleApp {
         if (isNew(pdf)) {
             JasperExportManager.exportReportToPdfFile(jrprint.getAbsolutePath(), pdf.getAbsolutePath());
         }
-        
-        System.out.println("file: " + pdf.getAbsolutePath());
+
+        writeResult(pdf);
     }
 
     @Override
@@ -111,7 +114,6 @@ public class Report extends AbstractSampleApp {
 
     private void cleanTemp() {
         if (getTempSize() > approxTempSize) {
-            System.out.println(getTempSize());
             deleteJrprintsAndPdfs();
         }
     }
@@ -175,12 +177,22 @@ public class Report extends AbstractSampleApp {
         }
     }
 
-    public static void main(String[] args) {
-        File file = new File("reports/JsonCustomersReport.jrxml");
-        File temp = new File("temp");
-        long approxTempSize = 1024 * 1024;
+    private void writeResult(File pdf) throws JRException {
+        try {
+            byte[] bytes = pdf.getAbsolutePath().getBytes("utf-8");
+            File result = toTempFile(new File(file.getAbsolutePath() + ".result"));
+            Files.write(result.toPath(), bytes, StandardOpenOption.CREATE);
+        } catch (Exception e) {
+            throw new JRException(e.toString(), e.getCause());
+        }
+    }
 
-        args = new String[]{file.getAbsolutePath(), temp.getAbsolutePath(), approxTempSize + ""};
+    public static void main(String[] args) {
+//        File file = new File("reports/JsonCustomersReport.jrxml");
+//        File temp = new File("temp");
+//        long approxTempSize = 1024 * 1024;
+//
+//        args = new String[]{file.getAbsolutePath(), temp.getAbsolutePath(), approxTempSize + ""};
 
         main(new Report(args), new String[]{"test"});
     }
