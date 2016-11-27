@@ -4,7 +4,6 @@ import java.io.File;
 import java.io.FileFilter;
 import java.io.IOException;
 import java.nio.file.Files;
-import java.nio.file.StandardOpenOption;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.HashMap;
@@ -44,8 +43,7 @@ public class Report extends AbstractSampleApp {
 
             temp.mkdirs();
             cleanTemp();
-            writeJson(args[3]);
-        } catch (IOException | NumberFormatException e) {
+        } catch (NumberFormatException e) {
             throw new JRException(e.toString(), e.getCause());
         }
 
@@ -56,7 +54,7 @@ public class Report extends AbstractSampleApp {
         long start = System.currentTimeMillis();
 
         try {
-            File json = new File(file.getAbsolutePath() + ".json");
+            File json = toTempFile(new File(file.getAbsolutePath() + ".json"));
             byte[] bytes = Files.readAllBytes(json.toPath());
             byte[] digest = MessageDigest.getInstance("MD5").digest(bytes);
             checksum = DatatypeConverter.printHexBinary(digest).toLowerCase();
@@ -78,8 +76,10 @@ public class Report extends AbstractSampleApp {
                 jasper.delete();
                 jasperCompileManager.compileToFile(jrxml.getAbsolutePath(), jasper.getAbsolutePath());
                 jrxml.setLastModified(0);
+                deleteJrprintsAndPdfs();
             } else if (isNew(jasper)) {
                 jasperCompileManager.compileToFile(jrxml.getAbsolutePath(), jasper.getAbsolutePath());
+                deleteJrprintsAndPdfs();
             }
         }
 
@@ -97,7 +97,6 @@ public class Report extends AbstractSampleApp {
         File jasper = new File(toTempFile(file).getAbsolutePath() + ".jasper");
         File jrprint = new File(toTempFile(file).getAbsolutePath() + "-" + checksum + ".jrprint");
         if (isChanged(jasper)) {
-            deleteJrprintsAndPdfs();
             JasperFillManager.fillReportToFile(jasper.getAbsolutePath(), jrprint.getAbsolutePath(), params);
             jasper.setLastModified(0);
         } else if (isNew(jrprint)) {
@@ -148,12 +147,6 @@ public class Report extends AbstractSampleApp {
         return size;
     }
 
-    private void writeJson(String base64) throws IOException {
-        byte[] bytes = DatatypeConverter.parseBase64Binary(base64);
-        File json = new File(file.getAbsolutePath() + ".json");
-        Files.write(toTempFile(json).toPath(), bytes, StandardOpenOption.CREATE);
-    }
-
     private File[] getSourceFiles(final String type) {
         File folder = file.getParentFile();
         File[] files = folder.listFiles(new FileFilter() {
@@ -200,15 +193,12 @@ public class Report extends AbstractSampleApp {
         }
     }
 
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) {
         File file = new File("reports/JsonCustomersReport.jrxml");
         File temp = new File("temp");
         long approxTempSize = 1024 * 1024;
-        
-        byte[] bytes = Files.readAllBytes(new File(file.getAbsolutePath().replace(".jrxml", ".json")).toPath());
-        String json = DatatypeConverter.printBase64Binary(bytes);
- 
-        args = new String[]{file.getAbsolutePath(), temp.getAbsolutePath(), approxTempSize + "", json};
+
+        args = new String[]{file.getAbsolutePath(), temp.getAbsolutePath(), approxTempSize + ""};
 
         main(new Report(args), new String[]{"test"});
     }
