@@ -6,21 +6,35 @@
 	<parameter name="SUBREPORT_DIR" class="java.lang.String" isForPrompting="false">
 		<defaultValueExpression><![CDATA["/home/jmd/Projects/report4all/reports/"]]></defaultValueExpression>
 	</parameter>
+	<parameter name="key" class="java.lang.String" isForPrompting="false"/>
 	<queryString language="json">
 		<![CDATA[]]>
 	</queryString>
-	<field name="company" class="java.lang.String"/>
+	<field name="code" class="java.lang.String"/>
+	<title>
+		<band height="50"/>
+	</title>
+	<pageHeader>
+		<band height="50"/>
+	</pageHeader>
+	<columnHeader>
+		<band height="50">
+			<textField>
+				<reportElement x="106" y="24" width="100" height="20" uuid="4f1f5e8f-228b-456f-b4ea-a2a51e2f70ef"/>
+				<textFieldExpression><![CDATA[$P{key}]]></textFieldExpression>
+			</textField>
+		</band>
+	</columnHeader>
 	<detail>
 		<band height="76" splitType="Stretch">
+			<staticText>
+				<reportElement x="22" y="14" width="100" height="20" uuid="1952fd82-366d-4a1c-ad3e-1592ea2b24b5"/>
+				<text><![CDATA[code]]></text>
+			</staticText>
 			<textField>
-				<reportElement x="0" y="0" width="555" height="20" uuid="b6626a58-cd59-43ff-8802-3e7e2ef4aa11"/>
-				<textFieldExpression><![CDATA[$F{company}]]></textFieldExpression>
+				<reportElement x="122" y="14" width="100" height="20" uuid="9f79c147-83a0-49f8-9a1e-89fd39a8e0d5"/>
+				<textFieldExpression><![CDATA[$F{code}]]></textFieldExpression>
 			</textField>
-			<subreport>
-				<reportElement x="0" y="20" width="555" height="56" uuid="007913c5-6d54-4974-9f7f-fcf8afdcb52d"/>
-				<dataSourceExpression><![CDATA[$P{REPORT_DATA_SOURCE}.subDataSource("customers")]]></dataSourceExpression>
-				<subreportExpression><![CDATA["_customers.jasper"]]></subreportExpression>
-			</subreport>
 		</band>
 	</detail>
 </jasperReport>

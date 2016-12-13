@@ -1,79 +1,76 @@
-{
-  "company": "Northwind",
-  "customers": [
-    {
-      "code": "ALFKI",
-      "name": "Maria Anders",
-      "country": "Germany",
-      "city": "Berlin",
-      "postal-code": 12209,
-      "address": "Obere Str. 57",
-      "contact": {
-        "phone": "030-0074321",
-        "fax": "030-0076545"
-      },
-      "orders": [
-        {
-          "ShipPostalCode": 51100,
-          "ShippedDate": "1996-07-16",
-          "OrderDate": "1996-07-04",
-          "code": 10248,
-          "Freight": 32.38,
-          "RequiredDate": "1996-08-01",
-          "ShipCity": "Reims",
-          "ShipCountry": "France",
-          "EmployeeID": 5,
-          "ShipVia": 3,
-          "CustomerID": "VINET",
-          "ShipAddress": "59 rue de l'Abbaye",
-          "ShipName": "Vins et alcools Chevalier"
-        }
-      ]
+[
+  {
+    "code": "ALFKI",
+    "name": "Maria Anders",
+    "country": "Germany",
+    "city": "Berlin",
+    "postal-code": 12209,
+    "address": "Obere Str. 57",
+    "contact": {
+      "phone": "030-0074321",
+      "fax": "030-0076545"
     },
-    {
-      "code": "ANATR",
-      "name": "Ana Trujillo",
-      "country": "Mexico",
-      "city": "México D.F.",
-      "postal-code": 12209,
-      "address": "Avda. de la Constitución 2222",
-      "contact": {
-        "phone": "(5) 555-4729",
-        "fax": "(5) 555-3745"
+    "orders": [
+      {
+        "ShipPostalCode": 51100,
+        "ShippedDate": "1996-07-16",
+        "OrderDate": "1996-07-04",
+        "code": 10248,
+        "Freight": 32.38,
+        "RequiredDate": "1996-08-01",
+        "ShipCity": "Reims",
+        "ShipCountry": "France",
+        "EmployeeID": 5,
+        "ShipVia": 3,
+        "CustomerID": "VINET",
+        "ShipAddress": "59 rue de l'Abbaye",
+        "ShipName": "Vins et alcools Chevalier"
+      }
+    ]
+  },
+  {
+    "code": "ANATR",
+    "name": "Ana Trujillo",
+    "country": "Mexico",
+    "city": "México D.F.",
+    "postal-code": 12209,
+    "address": "Avda. de la Constitución 2222",
+    "contact": {
+      "phone": "(5) 555-4729",
+      "fax": "(5) 555-3745"
+    },
+    "orders": [
+      {
+        "ShipPostalCode": 44087,
+        "ShippedDate": "1996-07-10",
+        "OrderDate": "1996-07-05",
+        "code": 10249,
+        "Freight": 11.61,
+        "RequiredDate": "1996-08-16",
+        "ShipCity": "Münster",
+        "ShipCountry": "Germany",
+        "EmployeeID": 6,
+        "ShipVia": 1,
+        "CustomerID": "TOMSP",
+        "ShipAddress": "Luisenstr. 48",
+        "ShipName": "Toms Spezialitäten"
       },
-      "orders": [
-        {
-          "ShipPostalCode": 44087,
-          "ShippedDate": "1996-07-10",
-          "OrderDate": "1996-07-05",
-          "code": 10249,
-          "Freight": 11.61,
-          "RequiredDate": "1996-08-16",
-          "ShipCity": "Münster",
-          "ShipCountry": "Germany",
-          "EmployeeID": 6,
-          "ShipVia": 1,
-          "CustomerID": "TOMSP",
-          "ShipAddress": "Luisenstr. 48",
-          "ShipName": "Toms Spezialitäten"
-        },
-        {
-          "ShipPostalCode": "05454-876",
-          "ShippedDate": "1996-07-12",
-          "OrderDate": "1996-07-08",
-          "code": 10250,
-          "Freight": 65.83,
-          "ShipRegion": "RJ",
-          "RequiredDate": "1996-08-05",
-          "ShipCity": "Rio de Janeiro",
-          "ShipCountry": "Brazil",
-          "EmployeeID": 4,
-          "ShipVia": 2,
-          "CustomerID": "HANAR",
-          "ShipAddress": "Rua do Paço, 67",
-          "ShipName": "Hanari Carnes"
-        }
-      ]
-    }
-  ]
-}
+      {
+        "ShipPostalCode": "05454-876",
+        "ShippedDate": "1996-07-12",
+        "OrderDate": "1996-07-08",
+        "code": 10250,
+        "Freight": 65.83,
+        "ShipRegion": "RJ",
+        "RequiredDate": "1996-08-05",
+        "ShipCity": "Rio de Janeiro",
+        "ShipCountry": "Brazil",
+        "EmployeeID": 4,
+        "ShipVia": 2,
+        "CustomerID": "HANAR",
+        "ShipAddress": "Rua do Paço, 67",
+        "ShipName": "Hanari Carnes"
+      }
+    ]
+  }
+]
