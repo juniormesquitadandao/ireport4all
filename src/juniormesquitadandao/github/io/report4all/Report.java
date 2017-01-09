@@ -28,9 +28,9 @@ public class Report extends AbstractSampleApp {
     private final String[] args;
     private File jasper;
     private File pdf;
-    private Locale outputLanguage;
+    private Locale reportLocale;
     private Map<String, Object> params;
-    private JsonDataSource dataSource;
+    private JsonDataSource jsonDataSource;
     private JasperPrint jasperPrint;
 
     public Report(String[] args) {
@@ -42,14 +42,14 @@ public class Report extends AbstractSampleApp {
     }
 
     public void fill() throws JRException {
-        params.put(JRParameter.REPORT_DATA_SOURCE, dataSource);
+        params.put(JRParameter.REPORT_DATA_SOURCE, jsonDataSource);
 //        params.put("net.sf.jasperreports.json.source", json.getAbsolutePath());
 //        params.put(JsonQueryExecuterFactory.JSON_DATE_PATTERN, "yyyy-MM-dd");
 //        params.put(JsonQueryExecuterFactory.JSON_NUMBER_PATTERN, "#,##0.##");
 
         params.put(JsonQueryExecuterFactory.JSON_LOCALE, Locale.ENGLISH);
 //        params.put(JsonQueryExecuterFactory.JSON_LOCALE, new Locale("pt", "BR"));
-        params.put(JRParameter.REPORT_LOCALE, outputLanguage);
+        params.put(JRParameter.REPORT_LOCALE, reportLocale);
 //        params.put(JRParameter.REPORT_LOCALE, Locale.US);
         jasperPrint = JasperFillManager.fillReport(jasper.getAbsolutePath(), params);
     }
@@ -65,16 +65,6 @@ public class Report extends AbstractSampleApp {
         export();
     }
 
-//    public static void main(String[] args) throws IOException {
-//        File file = new File("reports/demo.jasper");
-//
-//        args = new String[]{file.getAbsolutePath(), "pt-BR"};
-//
-//        main(new Report(args), new String[]{"test"});
-//    }
-//    public static void main(String[] args) {
-//        main(new Report(args), new String[]{"test"});
-//    }
     public static void main(String[] args) throws IOException {
         File jasper = new File("reports/demo.jasper");
 
@@ -85,19 +75,12 @@ public class Report extends AbstractSampleApp {
 
         String params = "{\"key\":\"value\"}";
 
-//        String report = "{\n"
-//                + "\"jasper\":\"" + jasper.getAbsolutePath() + "\",\n"
-//                + "\"data\":" + data + ","
-//                + "\"locale\":\"pt-BR\","
-//                + "\"params\":" + params + ",\n"
-//                + "\"pdf\":\"" + pdf.getAbsolutePath() + "\"\n"
-//                + "}";
-
         String report = "{\n"
                 + "\"jasper\":\"" + jasper.getAbsolutePath() + "\",\n"
-                + "\"data\":" + data + ","
-                + "\"locale\":\"pt-BR\","
-                + "\"params\":" + params + "\n"
+                + "\"data\":" + data + ",\n"
+                + "\"locale\":\"pt-BR\",\n"
+                + "\"params\":" + params + ",\n"
+                + "\"pdf\":\"" + pdf.getAbsolutePath() + "\"\n"
                 + "}";
 
         String base64 = DatatypeConverter.printBase64Binary(report.getBytes("UTF-8"));
@@ -115,17 +98,15 @@ public class Report extends AbstractSampleApp {
             Map<String, Object> map = objectMapper.readValue(decoded, new TypeReference<Map<String, Object>>() {
             });
 
-            System.out.println(map);
-
             extractJasper(map);
             extractData(map);
             extractLocale(map);
             extractParams(map);
             extractPdf(map);
         } catch (ArrayIndexOutOfBoundsException e) {
-            throw new JRException("Required Args: base64values");
+            throw new JRException("require json in base64");
         } catch(JsonParseException e){
-            throw new JRException("Options invalid format json");
+            throw new JRException("invalid json");
         } catch (Exception e) {
             throw new JRException(e.toString(), e.getCause());
         }
@@ -137,12 +118,12 @@ public class Report extends AbstractSampleApp {
 
     private void extractData(Map<String, Object> map) throws JsonProcessingException, JRException {
         byte[] bytes = new ObjectMapper().writeValueAsBytes(map.get("data"));
-        dataSource = new JsonDataSource(new ByteArrayInputStream(bytes));
+        jsonDataSource = new JsonDataSource(new ByteArrayInputStream(bytes));
     }
 
     private void extractLocale(Map<String, Object> map) {
         String localeString = (String) map.get("locale");
-        outputLanguage = new Locale(localeString.split("-")[0], localeString.split("-")[1]);
+        reportLocale = new Locale(localeString.split("-")[0], localeString.split("-")[1]);
     }
 
     private void extractParams(Map<String, Object> map) throws IOException {
