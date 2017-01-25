@@ -10,31 +10,31 @@
 	<queryString language="json">
 		<![CDATA[]]>
 	</queryString>
-	<field name="code" class="java.lang.String"/>
-	<title>
-		<band height="50"/>
-	</title>
-	<pageHeader>
-		<band height="50"/>
-	</pageHeader>
+	<field name="name" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
 	<columnHeader>
-		<band height="50">
+		<band height="20">
+			<staticText>
+				<reportElement x="-1" y="0" width="56" height="20" uuid="c12e5d74-e73f-4037-a617-ac23e89d80eb"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Category:]]></text>
+			</staticText>
 			<textField>
-				<reportElement x="106" y="24" width="100" height="20" uuid="4f1f5e8f-228b-456f-b4ea-a2a51e2f70ef"/>
-				<textFieldExpression><![CDATA[$P{key}]]></textFieldExpression>
+				<reportElement x="55" y="0" width="100" height="20" uuid="bcf141a9-48e8-47f5-ae5d-3b8bc4fcbc10"/>
+				<textFieldExpression><![CDATA[$F{name}]]></textFieldExpression>
 			</textField>
 		</band>
 	</columnHeader>
 	<detail>
-		<band height="76" splitType="Stretch">
-			<staticText>
-				<reportElement x="22" y="14" width="100" height="20" uuid="1952fd82-366d-4a1c-ad3e-1592ea2b24b5"/>
-				<text><![CDATA[code]]></text>
-			</staticText>
-			<textField>
-				<reportElement x="122" y="14" width="100" height="20" uuid="9f79c147-83a0-49f8-9a1e-89fd39a8e0d5"/>
-				<textFieldExpression><![CDATA[$F{code}]]></textFieldExpression>
-			</textField>
+		<band height="20" splitType="Stretch">
+			<subreport>
+				<reportElement x="0" y="0" width="555" height="20" uuid="2466164a-af2a-4785-8b73-c42edb54729b"/>
+				<dataSourceExpression><![CDATA[$P{REPORT_DATA_SOURCE}.subDataSource("products")]]></dataSourceExpression>
+				<subreportExpression><![CDATA["_products.jasper"]]></subreportExpression>
+			</subreport>
 		</band>
 	</detail>
 </jasperReport>
