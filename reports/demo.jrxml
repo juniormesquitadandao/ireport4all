@@ -1,40 +1,35 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="demo" language="javascript" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="29854271-49cc-4799-8a4b-11068072358c">
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="demo" language="javascript" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="c14cdc48-db19-4ce9-bc30-f67367cdd31d">
 	<property name="ireport.zoom" value="1.0"/>
 	<property name="ireport.x" value="0"/>
 	<property name="ireport.y" value="0"/>
 	<parameter name="SUBREPORT_DIR" class="java.lang.String" isForPrompting="false">
 		<defaultValueExpression><![CDATA["/home/jmd/Projects/report4all/reports/"]]></defaultValueExpression>
 	</parameter>
-	<parameter name="key" class="java.lang.String" isForPrompting="false"/>
 	<queryString language="json">
 		<![CDATA[]]>
 	</queryString>
-	<field name="name" class="java.lang.String">
-		<fieldDescription><![CDATA[]]></fieldDescription>
-	</field>
-	<field name="products" class="java.lang.String"/>
-	<columnHeader>
-		<band height="20">
-			<staticText>
-				<reportElement x="-1" y="0" width="56" height="20" uuid="c12e5d74-e73f-4037-a617-ac23e89d80eb"/>
-				<textElement>
-					<font isBold="true"/>
-				</textElement>
-				<text><![CDATA[Category:]]></text>
-			</staticText>
+	<field name="name" class="java.lang.String"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="20" splitType="Stretch">
 			<textField>
-				<reportElement x="55" y="0" width="100" height="20" uuid="bcf141a9-48e8-47f5-ae5d-3b8bc4fcbc10"/>
+				<reportElement x="0" y="0" width="555" height="20" uuid="8269595a-31b1-4758-90b5-22fb3764c9fe"/>
+				<textElement textAlignment="Center">
+					<font size="12" isBold="true"/>
+				</textElement>
 				<textFieldExpression><![CDATA[$F{name}]]></textFieldExpression>
 			</textField>
 		</band>
-	</columnHeader>
+	</title>
 	<detail>
-		<band height="20" splitType="Stretch">
+		<band height="41" splitType="Stretch">
 			<subreport>
-				<reportElement x="0" y="0" width="555" height="20" uuid="2466164a-af2a-4785-8b73-c42edb54729b"/>
-				<dataSourceExpression><![CDATA[$P{REPORT_DATA_SOURCE}.subDataSource("products")]]></dataSourceExpression>
-				<subreportExpression><![CDATA["_products.jasper"]]></subreportExpression>
+				<reportElement x="0" y="0" width="555" height="41" uuid="866a514a-3eea-44f7-aa73-f86b64398edb"/>
+				<dataSourceExpression><![CDATA[$P{REPORT_DATA_SOURCE}.subDataSource("categories")]]></dataSourceExpression>
+				<subreportExpression><![CDATA[$P{SUBREPORT_DIR} + "_categories.jasper"]]></subreportExpression>
 			</subreport>
 		</band>
 	</detail>

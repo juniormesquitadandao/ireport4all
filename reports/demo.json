@@ -1,47 +1,50 @@
-[
-  {
-    "name": "Telecommunication",
-    "products": [
-      {
-          "name": "Telephone",
-          "price": 99.98,
-          "stock": 3333,
-          "last-purchase": "2017-01-01T00:00:00.000Z",
-          "new": true
-      },
-      {
-          "name": "Cell Phone",
-          "price": 1999.98,
-          "stock": 1321,
-          "last-purchase": "2017-01-05T00:00:00.000Z",
-          "new": false
-      },
-      {
-          "name": "TV",
-          "price": 3999.98,
-          "stock": 3123,
-          "last-purchase": "2017-01-02T00:00:00.000Z",
-          "new": true
-      }
-    ]
-  },
-  {
-    "name": "Sport",
-    "products": [
-      {
-          "name": "Ball",
-          "price": 199.98,
-          "stock": 2000,
-          "last-purchase": "2017-01-03T00:00:00.000Z",
-          "new": true
-      },
-      {
-          "name": "Football Boots",
-          "price": 399.98,
-          "stock": 1500,
-          "last-purchase": "2017-01-04T00:00:00.000Z",
-          "new": true
-      }
-    ]
-  }
-]
+{
+  "name": "Store SA",
+  "categories": [
+    {
+      "name": "Telecommunication",
+      "products": [
+        {
+            "name": "Cell Phone",
+            "price": 1999.98,
+            "stock": 1321,
+            "last-purchase": "2017-01-05T00:00:00.000Z",
+            "new": false
+        },
+        {
+            "name": "Telephone",
+            "price": 99.98,
+            "stock": 3333,
+            "last-purchase": "2017-01-01T00:00:00.000Z",
+            "new": true
+        },
+        {
+            "name": "TV",
+            "price": 3999.98,
+            "stock": 3123,
+            "last-purchase": "2017-01-02T00:00:00.000Z",
+            "new": true
+        }
+      ]
+    },
+    {
+      "name": "Sport",
+      "products": [
+        {
+            "name": "Ball",
+            "price": 199.98,
+            "stock": 2000,
+            "last-purchase": "2017-01-03T00:00:00.000Z",
+            "new": true
+        },
+        {
+            "name": "Football Boots",
+            "price": 399.98,
+            "stock": 1500,
+            "last-purchase": "2017-01-04T00:00:00.000Z",
+            "new": true
+        }
+      ]
+    }
+  ]
+}

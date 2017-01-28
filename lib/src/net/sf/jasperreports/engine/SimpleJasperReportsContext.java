@@ -29,207 +29,268 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
+
 /**
  * @author Teodor Danciu (teodord@users.sourceforge.net)
- * @version $Id: SimpleJasperReportsContext.java 7199 2014-08-27 13:58:10Z
- * teodord $
+ * @version $Id: SimpleJasperReportsContext.java 7199 2014-08-27 13:58:10Z teodord $
  */
-public class SimpleJasperReportsContext implements JasperReportsContext {
+public class SimpleJasperReportsContext implements JasperReportsContext
+{
+	/**
+	 *
+	 */
+	private JasperReportsContext parent;
+	
+	private Map<String, Object> values = new ConcurrentHashMap<String, Object>(16, .75f, 1);// assume low update concurrency
+	private Map<String, String> properties;
+	private Map<Class<?>, List<?>> extensionsMap;
 
-    /**
-     *
-     */
-    private JasperReportsContext parent;
+	/**
+	 * Constructs a SimpleJasperReportsContext instance that has the DefaultJasperReportsContext.getInstance() as parent.
+	 */
+	public SimpleJasperReportsContext()
+	{
+		this(DefaultJasperReportsContext.getInstance());
+	}
 
-    private Map<String, Object> values = new ConcurrentHashMap<String, Object>(16, .75f, 1);// assume low update concurrency
-    private Map<String, String> properties;
-    private Map<Class<?>, List<?>> extensionsMap;
+	/**
+	 *
+	 */
+	public SimpleJasperReportsContext(JasperReportsContext parent)
+	{
+		this.parent = parent;
+	}
 
-    /**
-     * Constructs a SimpleJasperReportsContext instance that has the
-     * DefaultJasperReportsContext.getInstance() as parent.
-     */
-    public SimpleJasperReportsContext() {
-        this(DefaultJasperReportsContext.getInstance());
-    }
+	/**
+	 *
+	 */
+	public void setParent(JasperReportsContext parent)
+	{
+		this.parent = parent;
+	}
 
-    /**
-     *
-     */
-    public SimpleJasperReportsContext(JasperReportsContext parent) {
-        this.parent = parent;
-    }
+	/**
+	 *
+	 */
+	public Object getValue(String key)
+	{
+		if (values.containsKey(key))
+		{
+			return values.get(key);
+		}
+		if (parent != null)
+		{
+			return parent.getValue(key);
+		}
+		return null;
+	}
 
-    /**
-     *
-     */
-    public void setParent(JasperReportsContext parent) {
-        this.parent = parent;
-    }
+	/**
+	 *
+	 */
+	public void setValue(String key, Object value)
+	{
+		values.put(key, value);
+	}
 
-    /**
-     *
-     */
-    public Object getValue(String key) {
-        if (values.containsKey(key)) {
-            return values.get(key);
-        }
-        if (parent != null) {
-            return parent.getValue(key);
-        }
-        return null;
-    }
+	/**
+	 *
+	 */
+	public void removeValue(String key)
+	{
+		values.remove(key);
+	}
+	
+	/**
+	 * Returns a list of extension objects for a specific extension type.
+	 * 
+	 * @param extensionType the extension type
+	 * @param <T> generic extension type
+	 * @return a list of extension objects
+	 */
+	public <T> List<T> getExtensions(Class<T> extensionType)
+	{
+		if (extensionsMap == null || !extensionsMap.containsKey(extensionType))
+		{
+			if (parent == null)
+			{
+				return null;
+			}
+			else
+			{
+				return parent.getExtensions(extensionType);
+			}
+		}
+		else
+		{
+			@SuppressWarnings("unchecked")
+			List<T> extensionsList = (List<T>)extensionsMap.get(extensionType);
+			if (parent == null)
+			{
+				return extensionsList;
+			}
+			else
+			{
+				List<T> parentExtensions = parent.getExtensions(extensionType);
+				if (extensionsList == null || extensionsList.isEmpty())
+				{
+					if (parentExtensions == null || parentExtensions.isEmpty())
+					{
+						return null;
+					}
+					else
+					{
+						return parentExtensions;
+					}
+				}
+				else
+				{
+					if (parentExtensions == null || parentExtensions.isEmpty())
+					{
+						return extensionsList;
+					}
+					else
+					{
+						List<T> returnedList = new ArrayList<T>();
+						returnedList.addAll(extensionsList);
+						returnedList.addAll(parentExtensions);
+						return returnedList;
+					}
+				}
+			}
+		}
+	}
+	
+	/**
+	 *
+	 */
+	public <T> void setExtensions(Class<T> extensionType, List<? extends T> extensions)
+	{
+		if (extensionsMap == null)
+		{
+			extensionsMap = new HashMap<Class<?>, List<?>>();
+		}
+		extensionsMap.put(extensionType, extensions);
+	}
+	
+	/**
+	 *
+	 */
+	public void setExtensions(Map<Class<?>, List<?>> extensions)
+	{
+		extensionsMap = extensions;
+	}
+	
+	/**
+	 * Returns the value of the property.
+	 * 
+	 * @param key the key
+	 * @return the property value
+	 */
+	public String getProperty(String key)
+	{
+		if (properties != null && properties.containsKey(key))
+		{
+			return properties.get(key);
+		}
+		else
+		{
+			if (parent == null)
+			{
+				return null;
+			}
+			else
+			{
+				return parent.getProperty(key);
+			}
+		}
+	}
+	
+	/**
+	 * 
+	 */
+	public void setProperty(String key, String value)
+	{
+		if (properties == null)
+		{
+			properties = new HashMap<String, String>();
+		}
+		
+		properties.put(key, value);
+	}
+	
+	/**
+	 * 
+	 */
+	public void removeProperty(String key)
+	{
+		if (properties != null)
+		{
+			properties.remove(key);
+		}
+	}
+	
+	/**
+	 * 
+	 */
+	public Map<String, String> getProperties()
+	{
+		if (properties == null)
+		{
+			if (parent == null)
+			{
+				return null;
+			}
+			else
+			{
+				return parent.getProperties();
+			}
+		}
+		else
+		{
+			if (parent == null)
+			{
+				return properties;
+			}
+			else
+			{
+				Map<String, String> parentProperties = parent.getProperties();
+				if (properties == null || properties.isEmpty())
+				{
+					if (parentProperties == null || parentProperties.isEmpty())
+					{
+						return null;
+					}
+					else
+					{
+						return parentProperties;
+					}
+				}
+				else
+				{
+					if (parentProperties == null || parentProperties.isEmpty())
+					{
+						return properties;
+					}
+					else
+					{
+						Map<String, String> returnedMap = new HashMap<String, String>();
+						returnedMap.putAll(parentProperties);
+						returnedMap.putAll(properties);
+						return returnedMap;
+					}
+				}
+			}
+		}
+	}
 
-    /**
-     *
-     */
-    public void setValue(String key, Object value) {
-        values.put(key, value);
-    }
+	public Map<String, String> getPropertiesMap()
+	{
+		return properties;
+	}
 
-    /**
-     *
-     */
-    public void removeValue(String key) {
-        values.remove(key);
-    }
-
-    /**
-     * Returns a list of extension objects for a specific extension type.
-     *
-     * @param extensionType the extension type
-     * @param <T> generic extension type
-     * @return a list of extension objects
-     */
-    public <T> List<T> getExtensions(Class<T> extensionType) {
-        if (extensionsMap == null || !extensionsMap.containsKey(extensionType)) {
-            if (parent == null) {
-                return null;
-            } else {
-                return parent.getExtensions(extensionType);
-            }
-        } else {
-            @SuppressWarnings("unchecked")
-            List<T> extensionsList = (List<T>) extensionsMap.get(extensionType);
-            if (parent == null) {
-                return extensionsList;
-            } else {
-                List<T> parentExtensions = parent.getExtensions(extensionType);
-                if (extensionsList == null || extensionsList.isEmpty()) {
-                    if (parentExtensions == null || parentExtensions.isEmpty()) {
-                        return null;
-                    } else {
-                        return parentExtensions;
-                    }
-                } else {
-                    if (parentExtensions == null || parentExtensions.isEmpty()) {
-                        return extensionsList;
-                    } else {
-                        List<T> returnedList = new ArrayList<T>();
-                        returnedList.addAll(extensionsList);
-                        returnedList.addAll(parentExtensions);
-                        return returnedList;
-                    }
-                }
-            }
-        }
-    }
-
-    /**
-     *
-     */
-    public <T> void setExtensions(Class<T> extensionType, List<? extends T> extensions) {
-        if (extensionsMap == null) {
-            extensionsMap = new HashMap<Class<?>, List<?>>();
-        }
-        extensionsMap.put(extensionType, extensions);
-    }
-
-    /**
-     *
-     */
-    public void setExtensions(Map<Class<?>, List<?>> extensions) {
-        extensionsMap = extensions;
-    }
-
-    /**
-     * Returns the value of the property.
-     *
-     * @param key the key
-     * @return the property value
-     */
-    public String getProperty(String key) {
-        if (properties != null && properties.containsKey(key)) {
-            return properties.get(key);
-        } else {
-            if (parent == null) {
-                return null;
-            } else {
-                return parent.getProperty(key);
-            }
-        }
-    }
-
-    /**
-     *
-     */
-    public void setProperty(String key, String value) {
-        if (properties == null) {
-            properties = new HashMap<String, String>();
-        }
-
-        properties.put(key, value);
-    }
-
-    /**
-     *
-     */
-    public void removeProperty(String key) {
-        if (properties != null) {
-            properties.remove(key);
-        }
-    }
-
-    /**
-     *
-     */
-    public Map<String, String> getProperties() {
-        if (properties == null) {
-            if (parent == null) {
-                return null;
-            } else {
-                return parent.getProperties();
-            }
-        } else {
-            if (parent == null) {
-                return properties;
-            } else {
-                Map<String, String> parentProperties = parent.getProperties();
-                if (properties == null || properties.isEmpty()) {
-                    if (parentProperties == null || parentProperties.isEmpty()) {
-                        return null;
-                    } else {
-                        return parentProperties;
-                    }
-                } else {
-                    if (parentProperties == null || parentProperties.isEmpty()) {
-                        return properties;
-                    } else {
-                        Map<String, String> returnedMap = new HashMap<String, String>();
-                        returnedMap.putAll(parentProperties);
-                        returnedMap.putAll(properties);
-                        return returnedMap;
-                    }
-                }
-            }
-        }
-    }
-
-    public Map<String, String> getPropertiesMap() {
-        return properties;
-    }
-
-    public void setPropertiesMap(Map<String, String> propertiesMap) {
-        this.properties = propertiesMap;
-    }
+	public void setPropertiesMap(Map<String, String> propertiesMap)
+	{
+		this.properties = propertiesMap;
+	}
 }
