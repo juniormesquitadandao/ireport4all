@@ -22,6 +22,7 @@ import net.sf.jasperreports.engine.JasperPrint;
 import net.sf.jasperreports.engine.data.JsonDataSource;
 import net.sf.jasperreports.engine.query.JsonQueryExecuterFactory;
 import net.sf.jasperreports.engine.util.AbstractSampleApp;
+import net.sf.jasperreports.engine.util.JRDataUtils;
 
 public class Report extends AbstractSampleApp {
 
@@ -43,14 +44,9 @@ public class Report extends AbstractSampleApp {
 
     public void fill() throws JRException {
         params.put(JRParameter.REPORT_DATA_SOURCE, jsonDataSource);
-//        params.put("net.sf.jasperreports.json.source", json.getAbsolutePath());
-//        params.put(JsonQueryExecuterFactory.JSON_DATE_PATTERN, "yyyy-MM-dd");
-//        params.put(JsonQueryExecuterFactory.JSON_NUMBER_PATTERN, "#,##0.##");
-
-        params.put(JsonQueryExecuterFactory.JSON_LOCALE, Locale.ENGLISH);
-//        params.put(JsonQueryExecuterFactory.JSON_LOCALE, new Locale("pt", "BR"));
         params.put(JRParameter.REPORT_LOCALE, reportLocale);
-//        params.put(JRParameter.REPORT_LOCALE, Locale.US);
+        params.put(JRParameter.REPORT_TIME_ZONE, JRDataUtils.getTimeZone("UTC"));
+
         jasperPrint = JasperFillManager.fillReport(jasper.getAbsolutePath(), params);
     }
 
@@ -78,7 +74,7 @@ public class Report extends AbstractSampleApp {
         String report = "{\n"
                 + "\"jasper\":\"" + jasper.getAbsolutePath() + "\",\n"
                 + "\"data\":" + data + ",\n"
-                + "\"locale\":\"pt-BR\",\n"
+                + "\"locale\":\"pt_BR\",\n"
                 + "\"params\":" + params + ",\n"
                 + "\"pdf\":\"" + pdf.getAbsolutePath() + "\"\n"
                 + "}";
@@ -105,7 +101,7 @@ public class Report extends AbstractSampleApp {
             extractPdf(map);
         } catch (ArrayIndexOutOfBoundsException e) {
             throw new JRException("require json in base64");
-        } catch(JsonParseException e){
+        } catch (JsonParseException e) {
             throw new JRException("invalid json");
         } catch (Exception e) {
             throw new JRException(e.toString(), e.getCause());
@@ -123,7 +119,7 @@ public class Report extends AbstractSampleApp {
 
     private void extractLocale(Map<String, Object> map) {
         String localeString = (String) map.get("locale");
-        reportLocale = new Locale(localeString.split("-")[0], localeString.split("-")[1]);
+        reportLocale = JRDataUtils.getLocale(localeString);
     }
 
     private void extractParams(Map<String, Object> map) throws IOException {
