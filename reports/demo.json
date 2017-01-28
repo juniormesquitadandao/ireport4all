@@ -13,7 +13,7 @@
           "name": "Cell Phone",
           "price": 1999.98,
           "stock": 1321,
-          "last-purchase": null,
+          "last-purchase": "2017-01-05T00:00:00.000Z",
           "new": false
       },
       {

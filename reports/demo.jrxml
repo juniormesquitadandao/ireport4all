@@ -13,6 +13,7 @@
 	<field name="name" class="java.lang.String">
 		<fieldDescription><![CDATA[]]></fieldDescription>
 	</field>
+	<field name="products" class="java.lang.String"/>
 	<columnHeader>
 		<band height="20">
 			<staticText>
